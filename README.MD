@@ -71,7 +71,6 @@ durg results/
 │   ├── json_data_model.json     # Formal JSON data model
 │   └── result_dataset_directory.txt
 │
-├── datasets.zip                 # Pre-scraped raw result HTMLs (~800 MB)
 ├── roll number structure.xlsx   # Reference: DU roll number format guide
 └── README.MD
 ```
@@ -89,8 +88,8 @@ durg results/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/durg-results.git
-cd durg-results
+git clone https://github.com/work-Sameerbanchhor/DU-Analysis.git
+cd DU-Analysis
 ```
 
 ### 2. Run the Backend API Locally
