@@ -54,8 +54,10 @@
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
             --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.08);
-            background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 58, 237, 0.1), transparent),
-                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(59, 130, 246, 0.05), transparent);
+            --pass: #16a34a;
+            --pass-bg: rgba(22, 163, 74, 0.08);
+            --fail: #dc2626;
+            --fail-bg: rgba(220, 38, 38, 0.08);
         }
 
         .theme-toggle {
@@ -126,68 +128,8 @@
             background: #fff;
         }
 
-        .theme-toggle {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            color: var(--text);
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-left: 8px;
-        }
 
-        .theme-toggle svg {
-            width: 20px;
-            height: 20px;
-            display: none;
-        }
 
-        .theme-toggle .icon-sun {
-            display: block;
-        }
-
-        .light-mode .theme-toggle .icon-sun {
-            display: none;
-        }
-
-        .light-mode .theme-toggle .icon-moon {
-            display: block;
-        }
-
-        .light-mode .site-header {
-            background: rgba(255, 255, 255, 0.7);
-        }
-
-        .light-mode .college-banner,
-        .light-mode .stats-panel,
-        .light-mode .chart-widget,
-        .light-mode .table-card {
-            background: #ffffff;
-            border-color: rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-        }
-
-        .light-mode .stat-cell {
-            border-right-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .light-mode th {
-            background: rgba(124, 58, 237, 0.1);
-            color: var(--text);
-        }
-
-        .light-mode tr:nth-child(even) {
-            background: rgba(0, 0, 0, 0.01);
-        }
-
-        .light-mode tr:hover {
-            background: rgba(124, 58, 237, 0.04);
-        }
 
         *,
         *::before,
@@ -249,6 +191,13 @@
             z-index: 1;
         }
 
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
 
         .brand-emblem {
             width: 38px;
@@ -418,6 +367,16 @@
 
         .nav-drawer.open {
             display: block;
+        }
+
+        /* =============================================
+           FOOTER PAD
+        ============================================= */
+        .page-footer {
+            padding: 80px 0 60px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
         }
 
         /* =============================================
@@ -1261,7 +1220,7 @@
             <div class="header-brand">
                 <div class="brand-emblem">D</div>
                 <div class="brand-text">
-                    <h1>Analytics of durg University</h1>
+                    <h1>Analytics of Durg University</h1>
                     <p>by Sameer Banchhor</p>
                 </div>
             </div>
@@ -1271,6 +1230,7 @@
                 <a href="analysis.html" class="nav-link active">Analytics</a>
                 <a href="student.html" class="nav-link">Students</a>
                 <a href="status.html" class="nav-link">Server Status</a>
+                <a href="prediction.html" class="nav-link">AI Prediction</a>
             </nav>
 
             <div class="server-pill">
@@ -1299,7 +1259,7 @@
                 </button>
             </div>
 
-            <button class="nav-toggle" aria-label="Open menu">
+            <button class="nav-toggle" id="navToggle" aria-label="Open menu">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                     <rect y="4" width="22" height="2" rx="1" fill="white" />
                     <rect y="10" width="22" height="2" rx="1" fill="white" />
@@ -1323,6 +1283,7 @@
             <a href="analysis.html" class="nav-drawer-link active">Analytics</a>
             <a href="student.html" class="nav-drawer-link">Students</a>
             <a href="status.html" class="nav-drawer-link">Server Status</a>
+            <a href="prediction.html" class="nav-drawer-link">AI Prediction</a>
         </div>
     </div>
 
@@ -1370,6 +1331,10 @@
         </div>
 
         <div id="contentArea"></div>
+
+        <footer class="page-footer">
+            SAMEER BANCHHOR · University Analytics Portal · Data as of Feb 2026
+        </footer>
     </div>
 
     <script>
@@ -1828,20 +1793,18 @@
         });
     </script>
     <script>
-        // Init theme
+        // ---- THEME ----
+        function toggleTheme() {
+            const isLight = document.documentElement.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            if (typeof updateChartsTheme === 'function') updateChartsTheme(isLight);
+        }
+
         (function () {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
+            if (localStorage.getItem('theme') === 'light') {
                 document.documentElement.classList.add('light-mode');
             }
         })();
-
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            document.documentElement.classList.toggle('light-mode');
-            const isLight = document.documentElement.classList.contains('light-mode');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            if (typeof updateChartsTheme === 'function') updateChartsTheme(isLight);
-        });
 
         function updateChartsTheme(isLight) {
             Chart.defaults.color = isLight ? '#424245' : '#9898a6';
@@ -1858,4 +1821,3 @@
 </body>
 
 </html>
-```
